@@ -1,0 +1,25 @@
+{
+  "name": "sqlvueapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "devStart": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0",
+    "sequelize": "^6.32.1",
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.5.3",
+    "@types/sequelize": "^4.28.15",
+    "concurrently": "^8.2.1",
+    "nodemon": "^3.0.1",
+    "ts-node-dev": "^2.0.0"
+  }
+}
