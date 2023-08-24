@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const db_1 = __importDefault(require("../util/db"));
 class Post extends sequelize_1.Model {
-    id;
-    content;
 }
 Post.init({
     id: {

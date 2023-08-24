@@ -2,8 +2,8 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../util/db";
 
 class Post extends Model {
-  public id!: number;
-  public content!: string;
+  declare id: number;
+  declare content: string;
 }
 
 Post.init(

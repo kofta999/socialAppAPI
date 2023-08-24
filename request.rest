@@ -2,5 +2,20 @@ POST  http://localhost:3000/posts/create
 Content-Type: application/json
 
 {
-    "content": "hi"
+    "content": "hello"
+}
+
+###
+
+GET http://localhost:3000/posts/list
+
+###
+DELETE http://localhost:3000/posts/delete/4
+
+###
+PUT http://localhost:3000/posts/edit/4
+Content-Type: application/json
+
+{
+    "content": "yo"
 }
