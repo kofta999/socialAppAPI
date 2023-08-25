@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("./util/db"));
 const posts_1 = __importDefault(require("./routes/posts"));
+const comments_1 = __importDefault(require("./routes/comments"));
 const relations_1 = __importDefault(require("./util/relations"));
 const user_1 = __importDefault(require("./models/user"));
 // import session from "express-session";
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
         .catch((err) => console.log(err));
 });
 app.use("/posts", posts_1.default);
+app.use("/comments", comments_1.default);
 // app.use("/", authRouter)
 (0, relations_1.default)();
 db_1.default
@@ -45,7 +47,7 @@ db_1.default
         return user_1.default.create({
             fullName: "admin",
             email: "admin@admin.com",
-            hashedPassword: "admin"
+            hashedPassword: "admin",
         });
     }
     return user;

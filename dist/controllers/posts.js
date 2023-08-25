@@ -12,6 +12,7 @@ const getPosts = async (req, res) => {
     }
     catch (err) {
         console.log(err);
+        res.sendStatus(500);
     }
 };
 exports.getPosts = getPosts;
@@ -20,12 +21,13 @@ const postCreatePost = async (req, res) => {
     const user = res.locals.user;
     try {
         if (!postContent)
-            res.sendStatus(403);
+            res.sendStatus(400);
         await user.createPost({ content: postContent });
         res.status(201).json({ message: "post created", userId: user.id });
     }
     catch (err) {
         console.log(err);
+        res.sendStatus(500);
     }
 };
 exports.postCreatePost = postCreatePost;
@@ -47,6 +49,7 @@ const putEditPost = async (req, res) => {
     }
     catch (err) {
         console.log(err);
+        res.sendStatus(500);
     }
 };
 exports.putEditPost = putEditPost;
@@ -58,6 +61,7 @@ const deletePost = async (req, res) => {
     }
     catch (err) {
         console.log(err);
+        res.sendStatus(500);
     }
 };
 exports.deletePost = deletePost;

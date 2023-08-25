@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import sequelize from "./util/db";
 import postsRouter from "./routes/posts";
+import commentsRouter from "./routes/comments";
 import relations from "./util/relations";
 import User from "./models/user";
 import { Model } from "sequelize";
@@ -32,6 +33,7 @@ app.use((req: Request, res: Response, next) => {
 });
 
 app.use("/posts", postsRouter);
+app.use("/comments", commentsRouter);
 // app.use("/", authRouter)
 relations();
 
@@ -45,7 +47,7 @@ sequelize
       return User.create({
         fullName: "admin",
         email: "admin@admin.com",
-        hashedPassword: "admin"
+        hashedPassword: "admin",
       });
     }
     return user;

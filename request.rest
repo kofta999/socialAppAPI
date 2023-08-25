@@ -19,3 +19,25 @@ Content-Type: application/json
 {
     "content": "yo"
 }
+
+###
+POST http://localhost:3000/comments/create/1
+Content-Type: application/json
+
+{
+    "content": "comment"
+}
+
+###
+GET http://localhost:3000/comments/list/1
+
+###
+PUT http://localhost:3000/comments/edit/2
+Content-Type: application/json
+
+{
+    "content": "comment2"
+}
+
+###
+DELETE http://localhost:3000/comments/delete/3
