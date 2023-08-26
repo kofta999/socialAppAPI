@@ -23,7 +23,7 @@ export const postCreateComment = async (req: Request, res: Response) => {
 
 // postId => comments for postId
 export const getCommentsForPost = async (req: Request, res: Response) => {
-  const postId = req.params.postId;
+  const postId = parseInt(req.params.postId);
   try {
     const post: any = await Post.findByPk(postId);
     const comments = await post.getComments();
@@ -61,7 +61,6 @@ export const putEditComment = async (req: Request, res: Response) => {
 // commentId => no comment
 export const deleteComment = async (req: Request, res: Response) => {
   try {
-    console.log(req.params.commentId)
     const commentId = parseInt(req.params.commentId);
     const comment = await Comment.findByPk(commentId);
     if (!comment) {

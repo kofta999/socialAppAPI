@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("./util/db"));
 const posts_1 = __importDefault(require("./routes/posts"));
 const comments_1 = __importDefault(require("./routes/comments"));
+const likes_1 = __importDefault(require("./routes/likes"));
 const relations_1 = __importDefault(require("./util/relations"));
 const user_1 = __importDefault(require("./models/user"));
 // import session from "express-session";
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 });
 app.use("/posts", posts_1.default);
 app.use("/comments", comments_1.default);
+app.use("/likes", likes_1.default);
 // app.use("/", authRouter)
 (0, relations_1.default)();
 db_1.default

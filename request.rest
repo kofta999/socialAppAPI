@@ -1,3 +1,6 @@
+// Posts
+
+// Create a post
 POST  http://localhost:3000/posts/create
 Content-Type: application/json
 
@@ -7,12 +10,17 @@ Content-Type: application/json
 
 ###
 
+// Get all posts
 GET http://localhost:3000/posts/list
 
 ###
+
+// Delete a post
 DELETE http://localhost:3000/posts/delete/4
 
 ###
+
+// Edit a post
 PUT http://localhost:3000/posts/edit/4
 Content-Type: application/json
 
@@ -21,6 +29,10 @@ Content-Type: application/json
 }
 
 ###
+
+// Comments
+
+// Create a comment
 POST http://localhost:3000/comments/create/1
 Content-Type: application/json
 
@@ -28,10 +40,13 @@ Content-Type: application/json
     "content": "comment"
 }
 
+// Get all comments for a post
 ###
 GET http://localhost:3000/comments/list/1
 
 ###
+
+// Edit a comment
 PUT http://localhost:3000/comments/edit/2
 Content-Type: application/json
 
@@ -40,4 +55,42 @@ Content-Type: application/json
 }
 
 ###
+
+// Delete a comment
 DELETE http://localhost:3000/comments/delete/3
+
+###
+
+// Posts likes
+
+// Get likes for a post
+GET http://localhost:3000/likes/posts/1
+
+###
+
+// Like a post
+POST http://localhost:3000/likes/posts/1
+
+###
+
+// Unlike a post
+DELETE http://localhost:3000/likes/posts/3
+
+###
+
+// Comment likes
+
+// Get likes for a comment
+GET http://localhost:3000/likes/comments/1
+
+###
+
+// Like a comment
+POST http://localhost:3000/likes/comments/1
+
+###
+
+// Unlike a comment
+DELETE http://localhost:3000/likes/comments/1
+
+
