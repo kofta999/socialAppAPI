@@ -7,7 +7,7 @@
 * Like, unlike, list number of likes on a post / comment.
 
 ## TODO:
-- [ x ] remove redundant words in post and comment paths ex: (/post/{create})
+- [x] remove redundant words in post and comment paths ex: (/post/{create})
 - [ ] clean / comment the code
 - [ ] better error handling
 - [ ] work on authentication
