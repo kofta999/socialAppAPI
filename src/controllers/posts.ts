@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Post from "../models/post";
 
+// post content, user => created post with content and user
 export const postCreatePost = async (req: Request, res: Response) => {
   const postContent = req.body.content;
   const user = res.locals.user;
@@ -24,6 +25,7 @@ export const postCreatePost = async (req: Request, res: Response) => {
   }
 };
 
+// none => all posts
 export const getPosts = async (req: Request, res: Response) => {
   try {
     const posts = await Post.findAll();
@@ -40,6 +42,7 @@ export const getPosts = async (req: Request, res: Response) => {
   }
 };
 
+// postId, user, content => edited post with new content
 export const putEditPost = async (req: Request, res: Response) => {
   const user = res.locals.user;
   const postId = Number(req.query.postId);
@@ -78,6 +81,7 @@ export const putEditPost = async (req: Request, res: Response) => {
   }
 };
 
+// user, postId => removed post with postId and user
 export const deletePost = async (req: Request, res: Response) => {
   try {
     const user = res.locals.user;
