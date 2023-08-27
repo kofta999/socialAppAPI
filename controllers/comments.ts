@@ -5,7 +5,7 @@ import Comment from "../models/comment";
 // userId, postId => comment
 export const postCreateComment = async (req: Request, res: Response) => {
   const user = res.locals.user;
-  const postId = parseInt(req.params.postId);
+  const postId = Number(req.query.postId);
   const content = req.body.content;
   try {
     if (!content) res.sendStatus(400);
@@ -23,7 +23,7 @@ export const postCreateComment = async (req: Request, res: Response) => {
 
 // postId => comments for postId
 export const getCommentsForPost = async (req: Request, res: Response) => {
-  const postId = parseInt(req.params.postId);
+  const postId = Number(req.query.postId);
   try {
     const post: any = await Post.findByPk(postId);
     const comments = await post.getComments();
@@ -38,7 +38,7 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
 // commentId => updated comment
 export const putEditComment = async (req: Request, res: Response) => {
   try {
-    const commentId = req.params.commentId;
+    const commentId = Number(req.query.commentId);
     const content = req.body.content;
     const comment = await Comment.findByPk(commentId);
     if (!content) {
@@ -61,7 +61,7 @@ export const putEditComment = async (req: Request, res: Response) => {
 // commentId => no comment
 export const deleteComment = async (req: Request, res: Response) => {
   try {
-    const commentId = parseInt(req.params.commentId);
+    const commentId = Number(req.query.commentId);
     const comment = await Comment.findByPk(commentId);
     if (!comment) {
       res.sendStatus(404);

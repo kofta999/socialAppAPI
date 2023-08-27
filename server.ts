@@ -5,23 +5,9 @@ import commentsRouter from "./routes/comments";
 import likesRouter from "./routes/likes";
 import relations from "./util/relations";
 import User from "./models/user";
-// import session from "express-session";
-// import passport from "passport";
-// import dotenv from "dotenv";
-// import authRouter from "./routes/auth"
-// dotenv.config();
 
 const app = express();
 app.use(express.json());
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET || "secret",
-//     resave: false,
-//     saveUninitialized: false,
-//   })
-// );
-// app.use(passport.initialize());
-// app.use(passport.session());
 
 app.use((req: Request, res: Response, next) => {
   User.findByPk(1)
@@ -35,7 +21,6 @@ app.use((req: Request, res: Response, next) => {
 app.use("/posts", postsRouter);
 app.use("/comments", commentsRouter);
 app.use("/likes", likesRouter);
-// app.use("/", authRouter)
 relations();
 
 sequelize

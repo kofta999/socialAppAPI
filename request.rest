@@ -1,8 +1,18 @@
+// Global Variables
+@hostname = localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+@postId = 2
+@commentId = 4
+@likeId = 
+
+
 // Posts
 
 // Create a post
-POST  http://localhost:3000/posts/create
-Content-Type: application/json
+POST  http://{{host}}/posts
+Content-Type: {{contentType}}
 
 {
     "content": "hello"
@@ -11,18 +21,13 @@ Content-Type: application/json
 ###
 
 // Get all posts
-GET http://localhost:3000/posts/list
-
-###
-
-// Delete a post
-DELETE http://localhost:3000/posts/delete/4
+GET http://{{host}}/posts
 
 ###
 
 // Edit a post
-PUT http://localhost:3000/posts/edit/4
-Content-Type: application/json
+PUT http://{{host}}/posts?postId={{postId}}
+Content-Type: {{contentType}}
 
 {
     "content": "yo"
@@ -30,11 +35,16 @@ Content-Type: application/json
 
 ###
 
+// Delete a post
+DELETE http://{{host}}/posts?postId={{postId}}
+
+###
+
 // Comments
 
 // Create a comment
-POST http://localhost:3000/comments/create/1
-Content-Type: application/json
+POST http://{{host}}/comments?postId={{postId}}
+Content-Type: {{contentType}}
 
 {
     "content": "comment"
@@ -42,13 +52,13 @@ Content-Type: application/json
 
 // Get all comments for a post
 ###
-GET http://localhost:3000/comments/list/1
+GET http://{{host}}/comments?postId={{postId}}
 
 ###
 
 // Edit a comment
-PUT http://localhost:3000/comments/edit/2
-Content-Type: application/json
+PUT http://{{host}}/comments?commentId={{commentId}}
+Content-Type: {{contentType}}
 
 {
     "content": "comment2"
@@ -57,40 +67,39 @@ Content-Type: application/json
 ###
 
 // Delete a comment
-DELETE http://localhost:3000/comments/delete/3
-
+DELETE http://{{host}}/comments?commentId={{commentId}}
 ###
 
 // Posts likes
 
 // Get likes for a post
-GET http://localhost:3000/likes/posts/1
+GET http://{{host}}/likes?postId={{postId}}
 
 ###
 
 // Like a post
-POST http://localhost:3000/likes/posts/1
+POST http://{{host}}/likes/posts?postId={{postId}}
 
 ###
 
 // Unlike a post
-DELETE http://localhost:3000/likes/posts/3
+DELETE http://{{host}}/likes/posts/1
 
 ###
 
 // Comment likes
 
 // Get likes for a comment
-GET http://localhost:3000/likes/comments/1
+GET http://{{host}}/likes?commentId={{commentId}}
 
 ###
 
 // Like a comment
-POST http://localhost:3000/likes/comments/1
+POST http://{{host}}/likes?commentId={{commentId}}
 
 ###
 
 // Unlike a comment
-DELETE http://localhost:3000/likes/comments/1
+DELETE http://{{host}}/likes?likeId={{likeId}}
 
 

@@ -1,16 +1,6 @@
 import { Request, Response } from "express";
 import Post from "../models/post";
 
-export const getPosts = async (req: Request, res: Response) => {
-  try {
-    const posts = await Post.findAll();
-    res.status(200).json(posts);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-};
-
 export const postCreatePost = async (req: Request, res: Response) => {
   const postContent = req.body.content;
   const user = res.locals.user;
@@ -24,11 +14,22 @@ export const postCreatePost = async (req: Request, res: Response) => {
   }
 };
 
+export const getPosts = async (req: Request, res: Response) => {
+  try {
+    const posts = await Post.findAll();
+    res.status(200).json(posts);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+};
+
 export const putEditPost = async (req: Request, res: Response) => {
   const user = res.locals.user;
+  const postId = Number(req.query.postId)
   try {
     const post = await Post.findOne({
-      where: { id: req.params.id, userId: user.id },
+      where: { id: postId, userId: user.id },
     });
     const content = req.body.content;
     if (!post || !content) {
@@ -47,7 +48,8 @@ export const putEditPost = async (req: Request, res: Response) => {
 export const deletePost = async (req: Request, res: Response) => {
   try {
     const user = res.locals.user;
-    await Post.destroy({ where: { id: req.params.id, userId: user.id } });
+    const postId = Number(req.query.postId)
+    await Post.destroy({ where: { id: postId, userId: user.id } });
     res.status(204).json({ message: "post deleted", userId: user.id });
   } catch (err) {
     console.log(err);

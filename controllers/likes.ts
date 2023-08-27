@@ -4,16 +4,40 @@ import Post from "../models/post";
 import Comment from "../models/comment";
 import Like from "../models/like";
 
-// postId => likesCount
-export const getLikesOfPost = async (req: Request, res: Response) => {
-  const postId = parseInt(req.params.postId);
+// Helper functions
+
+const getLikable = (
+  query: Request["query"]
+): [number | null, typeof Post | typeof Comment | null] => {
+  switch (true) {
+    case !!query.postId:
+      return [Number(query.postId), Post];
+    case !!query.commentId:
+      return [Number(query.commentId), Comment];
+    default:
+      return [null, null];
+  }
+};
+
+// likeableId => likesCount
+export const getLikesOfLikable = async (req: Request, res: Response) => {
+  const [likableId, likableClass] = getLikable(req.query);
+  if (likableId == null || likableClass == null) {
+    res.sendStatus(400);
+    return;
+  }
+
   try {
-    const post: any = await Post.findByPk(postId);
-    if (!post) {
+    const likable: any = await likableClass.findByPk(likableId);
+    if (!likable) {
       res.sendStatus(404);
     } else {
-      const likesCount = await post.countLikes();
-      res.status(200).json({ likesCount: likesCount, postId: postId });
+      const likesCount = await likable.countLikes();
+      res.status(200).json({
+        likesCount: likesCount,
+        likableId: likableId,
+        likableType: likableClass.tableName,
+      });
     }
   } catch (err) {
     console.log(err);
@@ -21,16 +45,21 @@ export const getLikesOfPost = async (req: Request, res: Response) => {
   }
 };
 
-// postId, user => liked post
-export const postLikePost = async (req: Request, res: Response) => {
-  const postId = parseInt(req.params.postId);
+// likableId, user => liked likable
+export const postLikeLikable = async (req: Request, res: Response) => {
   const user = res.locals.user;
+  const [likableId, likableClass] = getLikable(req.query);
+  if (likableId == null || likableClass == null) {
+    res.sendStatus(400);
+    return;
+  }
+
   try {
-    const post: any = await Post.findByPk(postId);
-    if (!post) {
+    const likable: any = await likableClass.findByPk(likableId);
+    if (!likable) {
       res.sendStatus(404);
     } else {
-      await post.createLike({ userId: user.id });
+      await likable.createLike({ userId: user.id });
       res.status(200).json({ message: "like created" });
     }
   } catch (err) {
@@ -43,48 +72,9 @@ export const postLikePost = async (req: Request, res: Response) => {
   }
 };
 
-// commentId => likesCount
-export const getLikesOfComment = async (req: Request, res: Response) => {
-  const commentId = parseInt(req.params.commentId);
-  try {
-    const comment: any = await Comment.findByPk(commentId);
-    if (!comment) {
-      res.sendStatus(404);
-    } else {
-      const likesCount = await comment.countLikes();
-      res.status(200).json({ likesCount: likesCount, commentId: commentId });
-    }
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-};
-
-// commentId, user => liked comment
-export const postLikeComment = async (req: Request, res: Response) => {
-  const commentId = parseInt(req.params.commentId);
-  const user = res.locals.user;
-  try {
-    const comment: any = await Comment.findByPk(commentId);
-    if (!comment) {
-      res.sendStatus(404);
-    } else {
-      await comment.createLike({ userId: user.id });
-      res.status(200).json({ message: "like created" });
-    }
-  } catch (err) {
-    if (err instanceof UniqueConstraintError) {
-      res.sendStatus(400);
-    } else {
-      console.log(err);
-      res.sendStatus(500);
-    }
-  }
-};
-
-// likeId => Unliked post or comment
-export const deleteLikePostOrComment = async (req: Request, res: Response) => {
-  const likeId = parseInt(req.params.likeId);
+// likeId => Unliked likable
+export const deleteLikeOfLikable = async (req: Request, res: Response) => {
+  const likeId = Number(req.query.likeId);
   try {
     const like = await Like.findByPk(likeId);
     if (!like) {
