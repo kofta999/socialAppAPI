@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { ForeignKeyConstraintError } from "sequelize";
 import Post from "../models/post";
 import Comment from "../models/comment";
 
@@ -26,10 +27,17 @@ export const postCreateComment = async (req: Request, res: Response) => {
       });
     }
   } catch (err) {
-    console.log(err);
-    res
-      .status(500)
-      .json({ success: false, status_message: "internal server error" });
+    if (err instanceof ForeignKeyConstraintError) {
+      res.status(400).json({
+        success: false,
+        status_message: "bad request",
+      });
+    } else {
+      console.log(err);
+      res
+        .status(500)
+        .json({ success: false, status_message: "internal server error" });
+    }
   }
 };
 

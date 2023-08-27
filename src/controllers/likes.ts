@@ -6,6 +6,7 @@ import Like from "../models/like";
 
 // Helper functions
 
+// query => likableId, likableType
 const getLikable = (
   query: Request["query"]
 ): [number | null, typeof Post | typeof Comment | null] => {
@@ -19,56 +20,88 @@ const getLikable = (
   }
 };
 
-// likeableId => likesCount
-export const getLikesOfLikable = async (req: Request, res: Response) => {
-  const [likableId, likableClass] = getLikable(req.query);
-  if (likableId == null || likableClass == null) {
-    res.sendStatus(400);
-    return;
-  }
-
-  try {
-    const likable: any = await likableClass.findByPk(likableId);
-    if (!likable) {
-      res.sendStatus(404);
-    } else {
-      const likesCount = await likable.countLikes();
-      res.status(200).json({
-        likesCount: likesCount,
-        likableId: likableId,
-        likableType: likableClass.tableName,
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-};
-
 // likableId, user => liked likable
 export const postLikeLikable = async (req: Request, res: Response) => {
   const user = res.locals.user;
   const [likableId, likableClass] = getLikable(req.query);
   if (likableId == null || likableClass == null) {
-    res.sendStatus(400);
+    res.status(400).json({
+      success: false,
+      status_message: "bad request",
+    });
     return;
   }
 
   try {
     const likable: any = await likableClass.findByPk(likableId);
     if (!likable) {
-      res.sendStatus(404);
+      res.status(404).json({
+        success: false,
+        status_message: "the requested resource is not found",
+      });
     } else {
-      await likable.createLike({ userId: user.id });
-      res.status(200).json({ message: "like created" });
+      const likableType = likableClass.tableName.slice(0, -1);
+      const like = await likable.createLike({ userId: user.id });
+      res.status(200).json({
+        success: true,
+        status_message: "liked",
+        results: {
+          likableId: likableId,
+          likableType: likableType,
+          likeId: like.id,
+        },
+      });
     }
   } catch (err) {
     if (err instanceof UniqueConstraintError) {
-      res.sendStatus(400);
+      res.status(400).json({
+        success: false,
+        status_message: "bad request",
+      });
     } else {
-      console.log(err);
-      res.sendStatus(500);
+      res
+        .status(500)
+        .json({ success: false, status_message: "internal server error" });
     }
+  }
+};
+
+// likableId => likesCount
+export const getLikesOfLikable = async (req: Request, res: Response) => {
+  const [likableId, likableClass] = getLikable(req.query);
+  if (likableId == null || likableClass == null) {
+    res.status(400).json({
+      success: false,
+      status_message: "bad request",
+    });
+    return;
+  }
+
+  try {
+    const likable: any = await likableClass.findByPk(likableId);
+    if (!likable) {
+      res.status(404).json({
+        success: false,
+        status_message: "the requested resource is not found",
+      });
+    } else {
+      const likesCount = await likable.countLikes();
+      const likableType = likableClass.tableName.slice(0, -1);
+      res.status(200).json({
+        success: true,
+        status_message: "fetched likes",
+        results: {
+          likesCount: likesCount,
+          likableId: likableId,
+          likableType: likableType,
+        },
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ success: false, status_message: "internal server error" });
   }
 };
 
@@ -78,13 +111,17 @@ export const deleteLikeOfLikable = async (req: Request, res: Response) => {
   try {
     const like = await Like.findByPk(likeId);
     if (!like) {
-      res.sendStatus(404);
+      res.status(404).json({
+        success: false,
+        status_message: "the requested resource is not found",
+      });
     } else {
       await like.destroy();
-      res.status(204).json({ message: "like removed" });
+      res.sendStatus(204);
     }
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    res
+      .status(500)
+      .json({ success: false, status_message: "internal server error" });
   }
 };

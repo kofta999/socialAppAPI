@@ -3,9 +3,9 @@
 @port = 3000
 @host = {{hostname}}:{{port}}
 @contentType = application/json
-@postId = 8
-@commentId = 4
-@likeId = 
+@postId = 1
+@commentId = 3
+@likeId = 1
 
 
 // Posts
@@ -68,6 +68,7 @@ Content-Type: {{contentType}}
 
 // Delete a comment
 DELETE http://{{host}}/comments?commentId={{commentId}}
+
 ###
 
 // Posts likes
@@ -78,12 +79,7 @@ GET http://{{host}}/likes?postId={{postId}}
 ###
 
 // Like a post
-POST http://{{host}}/likes/posts?postId={{postId}}
-
-###
-
-// Unlike a post
-DELETE http://{{host}}/likes/posts/1
+POST http://{{host}}/likes?postId={{postId}}
 
 ###
 
@@ -99,7 +95,7 @@ POST http://{{host}}/likes?commentId={{commentId}}
 
 ###
 
-// Unlike a comment
+// Unlike posts or comments
 DELETE http://{{host}}/likes?likeId={{likeId}}
 
 
