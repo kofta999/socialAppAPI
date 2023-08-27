@@ -32,7 +32,7 @@ export const getPosts = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       status_message: "fetched all posts",
-      results: posts,
+      results: { posts: posts },
     });
   } catch (err) {
     console.log(err);
@@ -96,14 +96,6 @@ export const deletePost = async (req: Request, res: Response) => {
       });
     } else {
       res.sendStatus(204);
-      // res.status(204).json({
-      //   success: true,
-      //   status_message: "post deleted",
-      //   results: {
-      //     userId: user.id,
-      //     postId: postId,
-      //   },
-      // });
     }
   } catch (err) {
     console.log(err);

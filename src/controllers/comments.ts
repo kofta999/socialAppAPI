@@ -2,22 +2,34 @@ import { Request, Response } from "express";
 import Post from "../models/post";
 import Comment from "../models/comment";
 
-// userId, postId => comment
+// userId, postId => created comment
 export const postCreateComment = async (req: Request, res: Response) => {
   const user = res.locals.user;
   const postId = Number(req.query.postId);
   const content = req.body.content;
   try {
-    if (!content) res.sendStatus(400);
-
-    // I should also be able to use post.createComment({ content: content, userId: user.id})
-    await user.createComment({ content: content, postId: postId });
-    res
-      .status(201)
-      .json({ message: "comment created", userId: user.id, postId: postId });
+    if (!content) {
+      res.status(400).json({
+        success: false,
+        status_message: "bad request",
+      });
+    } else {
+      // I should also be able to use post.createComment({ content: content, userId: user.id})
+      const comment = await user.createComment({
+        content: content,
+        postId: postId,
+      });
+      res.status(201).json({
+        success: true,
+        status_message: "comment created",
+        results: { userId: user.id, postId: postId, commentId: comment.id },
+      });
+    }
   } catch (err) {
     console.log(err);
-    res.sendStatus(500);
+    res
+      .status(500)
+      .json({ success: false, status_message: "internal server error" });
   }
 };
 
@@ -27,11 +39,23 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
   try {
     const post: any = await Post.findByPk(postId);
     const comments = await post.getComments();
-    if (!post || !comments) res.sendStatus(404);
-    res.status(200).json(comments);
+    if (!post || !comments) {
+      res.status(404).json({
+        success: false,
+        status_message: "the requested resource is not found",
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        status_message: "fetched all comments",
+        results: { comments: comments, postId: postId },
+      });
+    }
   } catch (err) {
     console.log(err);
-    res.sendStatus(500);
+    res
+      .status(500)
+      .json({ success: false, status_message: "internal server error" });
   }
 };
 
@@ -42,35 +66,50 @@ export const putEditComment = async (req: Request, res: Response) => {
     const content = req.body.content;
     const comment = await Comment.findByPk(commentId);
     if (!content) {
-      res.sendStatus(400);
+      res.status(400).json({
+        success: false,
+        status_message: "bad request",
+      });
     } else if (!comment) {
-      res.sendStatus(404);
+      res.status(404).json({
+        success: false,
+        status_message: "the requested resource is not found",
+      });
     } else {
       comment.content = content;
       await comment.save();
-      res
-        .status(200)
-        .json({ message: "updated comment", commentId: commentId });
+      res.status(200).json({
+        success: true,
+        status_message: "updated comment",
+        results: {
+          commentId: commentId,
+        },
+      });
     }
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    res
+      .status(500)
+      .json({ success: false, status_message: "internal server error" });
   }
 };
 
-// commentId => no comment
+// commentId => removed comment
 export const deleteComment = async (req: Request, res: Response) => {
   try {
     const commentId = Number(req.query.commentId);
     const comment = await Comment.findByPk(commentId);
     if (!comment) {
-      res.sendStatus(404);
+      res.status(404).json({
+        success: false,
+        status_message: "the requested resource is not found",
+      });
     } else {
       comment.destroy();
-      res.status(204).json({ message: "comment deleted" });
+      res.sendStatus(204);
     }
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    res
+      .status(500)
+      .json({ success: false, status_message: "internal server error" });
   }
 };
