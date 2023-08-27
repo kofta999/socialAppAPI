@@ -8,7 +8,7 @@
 
 ## TODO:
 - [x] remove redundant words in post and comment paths ex: (/post/{create})
-- [ ] clean / comment the code
+- [x] clean / comment the code
 - [ ] better error handling
 - [ ] work on authentication
 - [ ] paginate the API

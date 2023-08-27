@@ -105,7 +105,7 @@ export const getLikesOfLikable = async (req: Request, res: Response) => {
   }
 };
 
-// likeId => Unliked likable
+// likeId => unliked likable
 export const deleteLikeOfLikable = async (req: Request, res: Response) => {
   const likeId = Number(req.query.likeId);
   try {
