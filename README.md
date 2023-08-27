@@ -7,10 +7,11 @@
 * Like, unlike, list number of likes on a post / comment.
 
 ## TODO:
-- [ ] remove redundant words in post and comment paths ex: (/post/{create})
+- [ x ] remove redundant words in post and comment paths ex: (/post/{create})
 - [ ] clean / comment the code
 - [ ] better error handling
 - [ ] work on authentication
+- [ ] paginate the API
 
 ## Tech Stack used:
 - Node.JS
