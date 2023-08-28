@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import { ForeignKeyConstraintError } from "sequelize";
 import Post from "../models/post";
 import Comment from "../models/comment";
+import User from "../models/user";
 
 // userId, postId => created comment
 export const postCreateComment = async (req: Request, res: Response) => {
-  const user = res.locals.user;
+  const user: User = res.locals.user;
   const postId = Number(req.query.postId);
   const content = req.body.content;
   try {
@@ -45,14 +46,14 @@ export const postCreateComment = async (req: Request, res: Response) => {
 export const getCommentsForPost = async (req: Request, res: Response) => {
   const postId = Number(req.query.postId);
   try {
-    const post: any = await Post.findByPk(postId);
-    const comments = await post.getComments();
-    if (!post || !comments) {
+    const post = await Post.findByPk(postId);
+    if (!post) {
       res.status(404).json({
         success: false,
         status_message: "the requested resource is not found",
       });
     } else {
+      const comments = await post.getComments();
       res.status(200).json({
         success: true,
         status_message: "fetched all comments",

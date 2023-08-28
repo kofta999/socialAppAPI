@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import Post from "../models/post";
+import User from "../models/user";
 
 // post content, user => created post with content and user
 export const postCreatePost = async (req: Request, res: Response) => {
   const postContent = req.body.content;
-  const user = res.locals.user;
+  const user: User = res.locals.user;
   try {
     if (!postContent)
       res.status(400).json({ success: false, status_message: "bad request" });

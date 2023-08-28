@@ -1,9 +1,19 @@
-import { DataTypes, Model } from "sequelize";
+import {
+  DataTypes,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
+  HasManyGetAssociationsMixin,
+  Model,
+} from "sequelize";
 import sequelize from "../util/db";
+import Like from "./like";
 
 class Post extends Model {
   declare id: number;
   declare content: string;
+  declare getComments: HasManyGetAssociationsMixin<Comment>;
+  declare createLike: HasManyCreateAssociationMixin<Like>;
+  declare countLikes: HasManyCountAssociationsMixin;
 }
 
 Post.init(

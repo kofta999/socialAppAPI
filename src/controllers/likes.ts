@@ -33,7 +33,7 @@ export const postLikeLikable = async (req: Request, res: Response) => {
   }
 
   try {
-    const likable: any = await likableClass.findByPk(likableId);
+    const likable = await likableClass.findByPk<Comment | Post>(likableId);
     if (!likable) {
       res.status(404).json({
         success: false,
@@ -78,7 +78,7 @@ export const getLikesOfLikable = async (req: Request, res: Response) => {
   }
 
   try {
-    const likable: any = await likableClass.findByPk(likableId);
+    const likable = await likableClass.findByPk<Post | Comment>(likableId);
     if (!likable) {
       res.status(404).json({
         success: false,
