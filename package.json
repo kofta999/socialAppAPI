@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/server.js",
-    "devStart": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\""
+    "devStart": "concurrently \"npx tsc --watch\" \"nodemon dist/server.js\""
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +19,8 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "sequelize": "^6.32.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

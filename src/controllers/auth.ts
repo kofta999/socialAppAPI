@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/user";
+import logger from "../util/logger";
 
 interface payload {
   userId: number;
@@ -34,6 +35,7 @@ export const authenticateUser = async (
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
+      logger.warn("token is missing");
       res
         .status(401)
         .json({ success: false, status_message: "token is missing" });
@@ -41,14 +43,15 @@ export const authenticateUser = async (
     }
     const [scheme, token] = authHeader.split(" ");
     if (!(scheme.toLowerCase() === "bearer" && token)) {
+      logger.warn("invalid token");
       res.status(403).json({ success: false, status_message: "invalid token" });
       return;
     }
     const { userId } = verifyAccessToken(token);
     res.locals.user = await User.findByPk(userId);
     next();
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    logger.error(err.message);
     res
       .status(500)
       .json({ success: false, status_message: "internal server error" });
@@ -57,12 +60,13 @@ export const authenticateUser = async (
 
 export const postSignup = async (req: Request, res: Response) => {
   const { fullName, email, password } = req.body;
-  console.log(fullName, email, password)
+  logger.debug(req.body);
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
     const existingUser = await User.findOne({ where: { email: email } });
     if (existingUser) {
+      logger.warn("user is already registered");
       res
         .status(400)
         .json({ success: false, status_message: "user is already registered" });
@@ -73,6 +77,7 @@ export const postSignup = async (req: Request, res: Response) => {
       email: email,
       hashedPassword: hashedPassword,
     });
+    logger.info("created user");
     res.status(201).json({
       success: true,
       status_message: "created user",
@@ -80,8 +85,8 @@ export const postSignup = async (req: Request, res: Response) => {
         userId: user.id,
       },
     });
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    logger.error(err.message);
     res
       .status(500)
       .json({ success: false, status_message: "internal server error" });
@@ -93,6 +98,7 @@ export const postLogin = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ where: { email: email } });
     if (!user) {
+      logger.warn("user not found");
       res
         .status(404)
         .json({ success: false, status_message: "user not found" });
@@ -102,6 +108,7 @@ export const postLogin = async (req: Request, res: Response) => {
     const passwordVerify = await bcrypt.compare(password, hashedPassword);
     if (passwordVerify) {
       const token = generateAccessToken({ userId: user.id, email: user.email });
+      logger.info("logged in user");
       res.status(200).json({
         success: true,
         status_message: "logged in user",
@@ -111,12 +118,13 @@ export const postLogin = async (req: Request, res: Response) => {
         },
       });
     } else {
+      logger.warn("wrong password");
       res
         .status(401)
         .json({ success: false, status_message: "wrong password" });
     }
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    logger.error(err.message);
     res
       .status(500)
       .json({ success: false, status_message: "internal server error" });
