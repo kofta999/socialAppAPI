@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import sequelize from "./util/db";
 import postsRouter from "./routes/posts";
 import commentsRouter from "./routes/comments";
