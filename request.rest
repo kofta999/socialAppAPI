@@ -4,15 +4,20 @@
 @host = {{hostname}}:{{port}}
 @contentType = application/json
 @postId = 1
-@commentId = 3
+@commentId = 2
 @likeId = 1
-
+@fullName = kofta
+@email = kofta@kofta.com
+@password = 1234
+@jwtToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoia29mdGFAa29mdGEubmV0IiwiaWF0IjoxNjkzMzIwNDA1LCJleHAiOjE2OTQ2MTY0MDV9.3cXUaCKe1OmeEeiRnTlqnTGjZIcNdUE9u_QIUnXnUhM
+@jwtToken2ndUser = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoia29mdGFAa29mdGEuY29tIiwiaWF0IjoxNjkzMzIxNzg3LCJleHAiOjE2OTQ2MTc3ODd9.dVKlIaR86E5_kIOXntsB9NmzCnD5Qobu8wW-MVlbMEs
 
 // Posts
 
 // Create a post
 POST  http://{{host}}/posts
 Content-Type: {{contentType}}
+Authorization: Bearer {{jwtToken2ndUser}}
 
 {
     "content": "hello"
@@ -28,6 +33,7 @@ GET http://{{host}}/posts
 // Edit a post
 PUT http://{{host}}/posts?postId={{postId}}
 Content-Type: {{contentType}}
+Authorization: Bearer {{jwtToken}}
 
 {
     "content": "yo"
@@ -37,6 +43,8 @@ Content-Type: {{contentType}}
 
 // Delete a post
 DELETE http://{{host}}/posts?postId={{postId}}
+Authorization: Bearer {{jwtToken}}
+
 
 ###
 
@@ -45,6 +53,7 @@ DELETE http://{{host}}/posts?postId={{postId}}
 // Create a comment
 POST http://{{host}}/comments?postId={{postId}}
 Content-Type: {{contentType}}
+Authorization: Bearer {{jwtToken}}
 
 {
     "content": "comment"
@@ -59,6 +68,7 @@ GET http://{{host}}/comments?postId={{postId}}
 // Edit a comment
 PUT http://{{host}}/comments?commentId={{commentId}}
 Content-Type: {{contentType}}
+Authorization: Bearer {{jwtToken2ndUser}}
 
 {
     "content": "comment2"
@@ -68,6 +78,7 @@ Content-Type: {{contentType}}
 
 // Delete a comment
 DELETE http://{{host}}/comments?commentId={{commentId}}
+Authorization: Bearer {{jwtToken}}
 
 ###
 
@@ -80,6 +91,7 @@ GET http://{{host}}/likes?postId={{postId}}
 
 // Like a post
 POST http://{{host}}/likes?postId={{postId}}
+Authorization: Bearer {{jwtToken}}
 
 ###
 
@@ -92,10 +104,35 @@ GET http://{{host}}/likes?commentId={{commentId}}
 
 // Like a comment
 POST http://{{host}}/likes?commentId={{commentId}}
+Authorization: Bearer {{jwtToken2ndUser}}
 
 ###
 
 // Unlike posts or comments
 DELETE http://{{host}}/likes?likeId={{likeId}}
+Authorization: Bearer {{jwtToken}}
 
+###
 
+// Authentication
+
+// Signup a user
+POST http://{{host}}/signup
+Content-Type: {{contentType}}
+
+{
+    "fullName": "{{fullName}}",
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+###
+
+// Login a user
+POST http://{{host}}/login
+Content-Type: {{contentType}}
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}

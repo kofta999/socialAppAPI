@@ -48,15 +48,17 @@ export const putEditPost = async (req: Request, res: Response) => {
   const user = res.locals.user;
   const postId = Number(req.query.postId);
   try {
-    const post = await Post.findOne({
-      where: { id: postId, userId: user.id },
-    });
+    const post = await Post.findByPk(postId);
     const content = req.body.content;
     if (!post) {
       res.status(404).json({
         success: false,
         status_message: "the requested resource is not found",
       });
+    } else if (post.userId !== user.id) {
+      res
+        .status(403)
+        .json({ success: false, status_message: "access forbidden" });
     } else if (!content) {
       res.status(400).json({
         success: false,
@@ -87,14 +89,16 @@ export const deletePost = async (req: Request, res: Response) => {
   try {
     const user = res.locals.user;
     const postId = Number(req.query.postId);
-    const destroyedPosts = await Post.destroy({
-      where: { id: postId, userId: user.id },
-    });
-    if (destroyedPosts === 0) {
+    const post = await Post.findByPk(postId);
+    if (!post) {
       res.status(404).json({
         success: false,
         status_message: "the requested resource is not found",
       });
+    } else if (post.userId !== user.id) {
+      res
+        .status(403)
+        .json({ success: false, status_message: "access forbidden" });
     } else {
       res.sendStatus(204);
     }

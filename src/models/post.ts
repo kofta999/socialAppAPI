@@ -11,6 +11,7 @@ import Like from "./like";
 class Post extends Model {
   declare id: number;
   declare content: string;
+  declare userId: number
   declare getComments: HasManyGetAssociationsMixin<Comment>;
   declare createLike: HasManyCreateAssociationMixin<Like>;
   declare countLikes: HasManyCountAssociationsMixin;

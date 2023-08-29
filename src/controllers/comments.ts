@@ -71,18 +71,23 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
 // commentId => updated comment
 export const putEditComment = async (req: Request, res: Response) => {
   try {
+    const user: User = res.locals.user;
     const commentId = Number(req.query.commentId);
     const content = req.body.content;
     const comment = await Comment.findByPk(commentId);
-    if (!content) {
-      res.status(400).json({
-        success: false,
-        status_message: "bad request",
-      });
-    } else if (!comment) {
+    if (!comment) {
       res.status(404).json({
         success: false,
         status_message: "the requested resource is not found",
+      });
+    } else if (comment.userId !== user.id) {
+      res
+        .status(403)
+        .json({ success: false, status_message: "access forbidden" });
+    } else if (!content) {
+      res.status(400).json({
+        success: false,
+        status_message: "bad request",
       });
     } else {
       comment.content = content;
@@ -107,11 +112,16 @@ export const deleteComment = async (req: Request, res: Response) => {
   try {
     const commentId = Number(req.query.commentId);
     const comment = await Comment.findByPk(commentId);
+    const user = res.locals.user;
     if (!comment) {
       res.status(404).json({
         success: false,
         status_message: "the requested resource is not found",
       });
+    } else if (comment.userId !== user.id) {
+      res
+        .status(403)
+        .json({ success: false, status_message: "access forbidden" });
     } else {
       comment.destroy();
       res.sendStatus(204);
