@@ -56,8 +56,8 @@ export const authenticateUser = async (
 };
 
 export const postSignup = async (req: Request, res: Response) => {
+  console.log(req.body)
   const { fullName, email, password } = req.body;
-  console.log(fullName, email, password)
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
