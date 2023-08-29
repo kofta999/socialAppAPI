@@ -61,6 +61,13 @@ export const postSignup = async (req: Request, res: Response) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
+    const existingUser = await User.findOne({ where: { email: email } });
+    if (existingUser) {
+      res
+        .status(400)
+        .json({ success: false, status_message: "user is already registered" });
+      return;
+    }
     const user = await User.create({
       fullName: fullName,
       email: email,
@@ -74,16 +81,10 @@ export const postSignup = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
-    if (err instanceof UniqueConstraintError) {
-      res
-        .status(400)
-        .json({ success: false, status_message: "user is already registered" });
-    } else {
-      console.log(err);
-      res
-        .status(500)
-        .json({ success: false, status_message: "internal server error" });
-    }
+    console.log(err);
+    res
+      .status(500)
+      .json({ success: false, status_message: "internal server error" });
   }
 };
 
