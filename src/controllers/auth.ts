@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/user";
-import { UniqueConstraintError } from "sequelize";
 
 interface payload {
   userId: number;
@@ -58,6 +57,7 @@ export const authenticateUser = async (
 
 export const postSignup = async (req: Request, res: Response) => {
   const { fullName, email, password } = req.body;
+  console.log(fullName, email, password)
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
