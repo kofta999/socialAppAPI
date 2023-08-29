@@ -6,6 +6,9 @@
 @postId = 1
 @commentId = 3
 @likeId = 1
+@fullName = kofta
+@email = kofta@kofta.net
+@password = 1234
 
 
 // Posts
@@ -97,5 +100,30 @@ POST http://{{host}}/likes?commentId={{commentId}}
 
 // Unlike posts or comments
 DELETE http://{{host}}/likes?likeId={{likeId}}
+
+###
+
+// Auth
+
+// Signup a user
+POST http://{{host}}/signup
+Content-Type: {{contentType}}
+
+{
+    "fullName": "{{fullName}}",
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+###
+
+// Login a user
+POST http://{{host}}/login
+Content-Type: {{contentType}}
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
 
 

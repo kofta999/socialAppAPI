@@ -3,6 +3,7 @@ import sequelize from "./util/db";
 import postsRouter from "./routes/posts";
 import commentsRouter from "./routes/comments";
 import likesRouter from "./routes/likes";
+import authRouter from "./routes/auth";
 import relations from "./util/relations";
 import User from "./models/user";
 
@@ -21,6 +22,7 @@ app.use((req: Request, res: Response, next) => {
 app.use("/posts", postsRouter);
 app.use("/comments", commentsRouter);
 app.use("/likes", likesRouter);
+app.use("/", authRouter);
 relations();
 
 sequelize

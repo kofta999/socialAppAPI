@@ -12,6 +12,7 @@
 - [ ] better error handling
 - [ ] work on authentication
 - [ ] paginate the API
+- [ ] auth validation
 
 ## Tech Stack used:
 - Node.JS
