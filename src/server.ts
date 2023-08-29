@@ -10,14 +10,14 @@ import User from "./models/user";
 const app = express();
 app.use(express.json());
 
-app.use((req: Request, res: Response, next) => {
-  User.findByPk(1)
-    .then((user) => {
-      res.locals.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
-});
+// app.use((req: Request, res: Response, next) => {
+//   User.findByPk(1)
+//     .then((user) => {
+//       res.locals.user = user;
+//       next();
+//     })
+//     .catch((err) => console.log(err));
+// });
 
 app.use("/posts", postsRouter);
 app.use("/comments", commentsRouter);

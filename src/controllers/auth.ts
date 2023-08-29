@@ -1,13 +1,18 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/user";
 import { UniqueConstraintError } from "sequelize";
 
+interface payload {
+  userId: number;
+  email: string;
+}
+
 // Helper functions
 
 // payload => jwt access token
-const generateAccessToken = (payload: object) => {
+const generateAccessToken = (payload: payload) => {
   return jwt.sign(payload, process.env.JWT_SECRET || "83n89j9190j@4j", {
     expiresIn: "15d",
   });
@@ -15,7 +20,40 @@ const generateAccessToken = (payload: object) => {
 
 // jwt access token => payload
 const verifyAccessToken = (token: string) => {
-  return jwt.verify(token, process.env.JWT_SECRET || "83n89j9190j@4j")
+  return jwt.verify(
+    token,
+    process.env.JWT_SECRET || "83n89j9190j@4j"
+  ) as payload;
+};
+
+// request => User
+export const authenticateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      res
+        .status(401)
+        .json({ success: false, status_message: "token is missing" });
+      return;
+    }
+    const [scheme, token] = authHeader.split(" ");
+    if (!(scheme.toLowerCase() === "bearer" && token)) {
+      res.status(403).json({ success: false, status_message: "invalid token" });
+      return;
+    }
+    const { userId } = verifyAccessToken(token);
+    res.locals.user = await User.findByPk(userId);
+    next();
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ success: false, status_message: "internal server error" });
+  }
 };
 
 export const postSignup = async (req: Request, res: Response) => {

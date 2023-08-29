@@ -7,15 +7,17 @@
 @commentId = 3
 @likeId = 1
 @fullName = kofta
-@email = kofta@kofta.net
+@email = kofta@kofta.com
 @password = 1234
-
+@jwtToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoia29mdGFAa29mdGEubmV0IiwiaWF0IjoxNjkzMzIwNDA1LCJleHAiOjE2OTQ2MTY0MDV9.3cXUaCKe1OmeEeiRnTlqnTGjZIcNdUE9u_QIUnXnUhM
+@jwtToken2ndUser = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoia29mdGFAa29mdGEuY29tIiwiaWF0IjoxNjkzMzIxNzg3LCJleHAiOjE2OTQ2MTc3ODd9.dVKlIaR86E5_kIOXntsB9NmzCnD5Qobu8wW-MVlbMEs
 
 // Posts
 
 // Create a post
 POST  http://{{host}}/posts
 Content-Type: {{contentType}}
+Authorization: Bearer {{jwtToken2ndUser}}
 
 {
     "content": "hello"
@@ -31,6 +33,7 @@ GET http://{{host}}/posts
 // Edit a post
 PUT http://{{host}}/posts?postId={{postId}}
 Content-Type: {{contentType}}
+Authorization: Bearer {{jwtToken}}
 
 {
     "content": "yo"
@@ -40,6 +43,8 @@ Content-Type: {{contentType}}
 
 // Delete a post
 DELETE http://{{host}}/posts?postId={{postId}}
+Authorization: Bearer {{jwtToken}}
+
 
 ###
 
