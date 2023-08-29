@@ -1,11 +1,12 @@
 import { Router } from "express";
-import * as commentsController from "../controllers/comments"
+import * as commentsController from "../controllers/comments";
+import { authenticateUser } from "../controllers/auth";
 
 const router = Router();
 
-router.post("/", commentsController.postCreateComment);
+router.post("/", authenticateUser, commentsController.postCreateComment);
 router.get("/", commentsController.getCommentsForPost);
-router.put("/", commentsController.putEditComment);
-router.delete("/",  commentsController.deleteComment);
+router.put("/", authenticateUser, commentsController.putEditComment);
+router.delete("/", authenticateUser, commentsController.deleteComment);
 
-export default router
+export default router;

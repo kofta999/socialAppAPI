@@ -1,11 +1,11 @@
 import { Router } from "express";
 import * as likesController from "../controllers/likes";
+import { authenticateUser } from "../controllers/auth";
 
 const router = Router();
 
-router.post("/", likesController.postLikeLikable);
+router.post("/", authenticateUser, likesController.postLikeLikable);
 router.get("/", likesController.getLikesOfLikable);
-router.delete("/", likesController.deleteLikeOfLikable);
-
+router.delete("/", authenticateUser, likesController.deleteLikeOfLikable);
 
 export default router;

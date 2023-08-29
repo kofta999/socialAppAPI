@@ -89,9 +89,6 @@ export const deletePost = async (req: Request, res: Response) => {
   try {
     const user = res.locals.user;
     const postId = Number(req.query.postId);
-    // const destroyedPosts = await Post.destroy({
-    //   where: { id: postId, userId: user.id },
-    // });
     const post = await Post.findByPk(postId);
     if (!post) {
       res.status(404).json({

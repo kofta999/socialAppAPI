@@ -10,6 +10,7 @@ import Like from "./like";
 class Comment extends Model {
   declare id: number;
   declare content: string;
+  declare userId: number;
   declare createLike: HasManyCreateAssociationMixin<Like>;
   declare countLikes: HasManyCountAssociationsMixin;
 }

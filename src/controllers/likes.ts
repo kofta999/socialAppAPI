@@ -108,6 +108,7 @@ export const getLikesOfLikable = async (req: Request, res: Response) => {
 // likeId => unliked likable
 export const deleteLikeOfLikable = async (req: Request, res: Response) => {
   const likeId = Number(req.query.likeId);
+  const user = res.locals.user;
   try {
     const like = await Like.findByPk(likeId);
     if (!like) {
@@ -115,6 +116,10 @@ export const deleteLikeOfLikable = async (req: Request, res: Response) => {
         success: false,
         status_message: "the requested resource is not found",
       });
+    } else if (like.userId !== user.id) {
+      res
+        .status(403)
+        .json({ success: false, status_message: "access forbidden" });
     } else {
       await like.destroy();
       res.sendStatus(204);
