@@ -9,10 +9,10 @@
 ## TODO:
 - [x] remove redundant words in post and comment paths ex: (/post/{create})
 - [x] clean / comment the code
-- [ ] better error handling
-- [ ] work on authentication
+- [x] better error handling
+- [x] work on authentication
 - [ ] paginate the API
-- [ ] auth validation
+- [ ] auth credentials validation
 
 ## Tech Stack used:
 - Node.JS
