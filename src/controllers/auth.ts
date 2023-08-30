@@ -56,11 +56,9 @@ export const authenticateUser = async (
 };
 
 export const postSignup = async (req: Request, res: Response) => {
-  console.log(req.body)
   const { fullName, email, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
     const existingUser = await User.findOne({ where: { email: email } });
     if (existingUser) {
       res
