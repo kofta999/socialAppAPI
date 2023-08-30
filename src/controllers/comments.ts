@@ -3,6 +3,7 @@ import { ForeignKeyConstraintError } from "sequelize";
 import Post from "../models/post";
 import Comment from "../models/comment";
 import User from "../models/user";
+import logger from "../util/logger";
 
 // userId, postId => created comment
 export const postCreateComment = async (req: Request, res: Response) => {
@@ -11,6 +12,7 @@ export const postCreateComment = async (req: Request, res: Response) => {
   const content = req.body.content;
   try {
     if (!content) {
+      logger.warn("bad request, content is not found");
       res.status(400).json({
         success: false,
         status_message: "bad request",
@@ -21,20 +23,22 @@ export const postCreateComment = async (req: Request, res: Response) => {
         content: content,
         postId: postId,
       });
+      logger.info("a comment was created");
       res.status(201).json({
         success: true,
         status_message: "comment created",
         results: { userId: user.id, postId: postId, commentId: comment.id },
       });
     }
-  } catch (err) {
+  } catch (err: any) {
     if (err instanceof ForeignKeyConstraintError) {
+      logger.warn("bad request, user does not exist");
       res.status(400).json({
         success: false,
         status_message: "bad request",
       });
     } else {
-      console.log(err);
+      logger.error(err.message);
       res
         .status(500)
         .json({ success: false, status_message: "internal server error" });
@@ -48,20 +52,22 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
   try {
     const post = await Post.findByPk(postId);
     if (!post) {
+      logger.warn("post not found");
       res.status(404).json({
         success: false,
         status_message: "the requested resource is not found",
       });
     } else {
       const comments = await post.getComments();
+      logger.info("fetched all comments for a post");
       res.status(200).json({
         success: true,
         status_message: "fetched all comments",
         results: { comments: comments, postId: postId },
       });
     }
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    logger.error(err.message);
     res
       .status(500)
       .json({ success: false, status_message: "internal server error" });
@@ -76,15 +82,18 @@ export const putEditComment = async (req: Request, res: Response) => {
     const content = req.body.content;
     const comment = await Comment.findByPk(commentId);
     if (!comment) {
+      logger.warn("comment not found");
       res.status(404).json({
         success: false,
         status_message: "the requested resource is not found",
       });
     } else if (comment.userId !== user.id) {
+      logger.warn("access forbidden for editing a comment for another user");
       res
         .status(403)
         .json({ success: false, status_message: "access forbidden" });
     } else if (!content) {
+      logger.warn("bad request, no comment content to edit");
       res.status(400).json({
         success: false,
         status_message: "bad request",
@@ -92,6 +101,7 @@ export const putEditComment = async (req: Request, res: Response) => {
     } else {
       comment.content = content;
       await comment.save();
+      logger.info("updated comment");
       res.status(200).json({
         success: true,
         status_message: "updated comment",
@@ -100,7 +110,8 @@ export const putEditComment = async (req: Request, res: Response) => {
         },
       });
     }
-  } catch (err) {
+  } catch (err: any) {
+    logger.error(err.message);
     res
       .status(500)
       .json({ success: false, status_message: "internal server error" });
@@ -114,11 +125,13 @@ export const deleteComment = async (req: Request, res: Response) => {
     const comment = await Comment.findByPk(commentId);
     const user = res.locals.user;
     if (!comment) {
+      logger.warn("comment not found");
       res.status(404).json({
         success: false,
         status_message: "the requested resource is not found",
       });
     } else if (comment.userId !== user.id) {
+      logger.warn("access forbidden, trying to delete another user's comment");
       res
         .status(403)
         .json({ success: false, status_message: "access forbidden" });
@@ -126,7 +139,8 @@ export const deleteComment = async (req: Request, res: Response) => {
       comment.destroy();
       res.sendStatus(204);
     }
-  } catch (err) {
+  } catch (err: any) {
+    logger.error(err.message);
     res
       .status(500)
       .json({ success: false, status_message: "internal server error" });
