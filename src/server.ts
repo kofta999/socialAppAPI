@@ -4,6 +4,7 @@ import postsRouter from "./routes/posts";
 import commentsRouter from "./routes/comments";
 import likesRouter from "./routes/likes";
 import authRouter from "./routes/auth";
+import profileRouter from "./routes/profile"
 import relations from "./util/relations";
 
 const app = express();
@@ -13,6 +14,7 @@ app.use("/posts", postsRouter);
 app.use("/comments", commentsRouter);
 app.use("/likes", likesRouter);
 app.use("/", authRouter);
+app.use("/profile", profileRouter)
 relations();
 
 sequelize

@@ -11,6 +11,7 @@
 @password = 1234
 @jwtToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoia29mdGFAa29mdGEubmV0IiwiaWF0IjoxNjkzMzIwNDA1LCJleHAiOjE2OTQ2MTY0MDV9.3cXUaCKe1OmeEeiRnTlqnTGjZIcNdUE9u_QIUnXnUhM
 @jwtToken2ndUser = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoia29mdGFAa29mdGEuY29tIiwiaWF0IjoxNjkzMzIxNzg3LCJleHAiOjE2OTQ2MTc3ODd9.dVKlIaR86E5_kIOXntsB9NmzCnD5Qobu8wW-MVlbMEs
+@userId = 1
 
 // Posts
 
@@ -136,3 +137,10 @@ Content-Type: {{contentType}}
     "email": "{{email}}",
     "password": "{{password}}"
 }
+
+###
+
+// Profile
+
+// Get profile of user
+GET http://{{host}}/profile/{{userId}}
