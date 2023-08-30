@@ -115,6 +115,7 @@ export const postLogin = async (req: Request, res: Response) => {
         results: {
           access_token: token,
           userId: user.id,
+          userFullName: user.fullName,
         },
       });
     } else {

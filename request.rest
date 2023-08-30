@@ -110,7 +110,7 @@ Authorization: Bearer {{jwtToken2ndUser}}
 
 // Unlike posts or comments
 DELETE http://{{host}}/likes?likeId={{likeId}}
-Authorization: Bearer {{jwtToken}}
+Authorization: Bearer {{jwtToken2ndUser}}
 
 ###
 
