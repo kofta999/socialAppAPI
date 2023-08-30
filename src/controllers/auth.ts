@@ -63,7 +63,6 @@ export const postSignup = async (req: Request, res: Response) => {
   logger.debug(req.body);
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
     const existingUser = await User.findOne({ where: { email: email } });
     if (existingUser) {
       logger.warn("user is already registered");
