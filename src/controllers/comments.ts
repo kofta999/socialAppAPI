@@ -58,7 +58,10 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
         status_message: "the requested resource is not found",
       });
     } else {
-      const comments = await post.getComments();
+      const comments = await post.getComments({
+        attributes: ["id", "content", "createdAt", "updatedAt"],
+        include: { model: User, attributes: ["fullName"] },
+      });
       logger.info("fetched all comments for a post");
       res.status(200).json({
         success: true,

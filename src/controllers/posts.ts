@@ -34,7 +34,10 @@ export const postCreatePost = async (req: Request, res: Response) => {
 // none => all posts
 export const getPosts = async (req: Request, res: Response) => {
   try {
-    const posts = await Post.findAll();
+    const posts = await Post.findAll({
+      attributes: ["id", "content", "createdAt", "updatedAt"],
+      include: { model: User, attributes: ["fullName", "id"] },
+    });
     logger.info("fetched all posts");
     res.status(200).json({
       success: true,
