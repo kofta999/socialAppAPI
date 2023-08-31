@@ -48,8 +48,19 @@ export const authenticateUser = async (
       return;
     }
     const { userId } = verifyAccessToken(token);
-    res.locals.user = await User.findByPk(userId);
-    next();
+    const user = await User.findByPk(userId);
+    if (!user) {
+      if (!user) {
+        logger.warn("user not found");
+        res
+          .status(404)
+          .json({ success: false, status_message: "user not found" });
+        return;
+      }
+    } else {
+      res.locals.user = user;
+      next();
+    }
   } catch (err: any) {
     logger.error(err.message);
     res

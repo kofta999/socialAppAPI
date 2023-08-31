@@ -27,6 +27,7 @@ export const postCreatePost = async (req: Request, res: Response) => {
       },
     });
   } catch (err: any) {
+    console.log(err);
     logger.error(err.message);
     res
       .status(500)
@@ -37,11 +38,18 @@ export const postCreatePost = async (req: Request, res: Response) => {
 // none => all posts
 export const getPosts = async (req: Request, res: Response) => {
   try {
+    const user: User = res.locals.user;
     const posts = await Post.findAll({
       attributes: {
         include: [
           [sequelize.fn("COUNT", sequelize.col("comments.id")), "commentCount"],
           [sequelize.fn("COUNT", sequelize.col("likes.id")), "likesCount"],
+          [
+            sequelize.literal(
+              `EXISTS (SELECT 1 FROM likes WHERE likes.likableId = post.id AND likes.likableType = 'post' AND likes.userId = ${user.id})`
+            ),
+            "likedByUser",
+          ],
         ],
         exclude: ["userId"],
       },
@@ -56,7 +64,9 @@ export const getPosts = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       status_message: "fetched all posts",
-      results: { posts: posts },
+      results: {
+        posts: posts,
+      },
     });
   } catch (err: any) {
     logger.error(err.message);
@@ -132,6 +142,7 @@ export const deletePost = async (req: Request, res: Response) => {
         .json({ success: false, status_message: "access forbidden" });
     } else {
       logger.info("post deleted");
+      post.destroy();
       res.sendStatus(204);
     }
   } catch (err: any) {

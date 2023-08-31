@@ -9,7 +9,7 @@
 @fullName = kofta
 @email = kofta@kofta.com
 @password = 1234
-@jwtToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoia29mdGFAa29mdGEubmV0IiwiaWF0IjoxNjkzMzIwNDA1LCJleHAiOjE2OTQ2MTY0MDV9.3cXUaCKe1OmeEeiRnTlqnTGjZIcNdUE9u_QIUnXnUhM
+@jwtToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoia29mdGFAa29mdGEuY29tIiwiaWF0IjoxNjkzNTIzMTk0LCJleHAiOjE2OTQ4MTkxOTR9.m0DABXonuvLV_DziEbO0GkQArYZMSMlu4kFZrSVPPuw
 @jwtToken2ndUser = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoia29mdGFAa29mdGEuY29tIiwiaWF0IjoxNjkzMzIxNzg3LCJleHAiOjE2OTQ2MTc3ODd9.dVKlIaR86E5_kIOXntsB9NmzCnD5Qobu8wW-MVlbMEs
 @userId = 1
 
@@ -18,7 +18,7 @@
 // Create a post
 POST  http://{{host}}/posts
 Content-Type: {{contentType}}
-Authorization: Bearer {{jwtToken2ndUser}}
+Authorization: Bearer {{jwtToken}}
 
 {
     "content": "hello"
@@ -28,6 +28,7 @@ Authorization: Bearer {{jwtToken2ndUser}}
 
 // Get all posts
 GET http://{{host}}/posts
+Authorization: Bearer {{jwtToken}}
 
 ###
 

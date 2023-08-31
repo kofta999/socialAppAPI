@@ -5,7 +5,7 @@ import { authenticateUser } from "../controllers/auth";
 const router = Router();
 
 router.post("/", authenticateUser, postsController.postCreatePost);
-router.get("/", postsController.getPosts);
+router.get("/", authenticateUser, postsController.getPosts);
 router.put("/", authenticateUser, postsController.putEditPost);
 router.delete("/", authenticateUser, postsController.deletePost);
 
