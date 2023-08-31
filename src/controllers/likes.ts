@@ -68,7 +68,7 @@ export const postLikeLikable = async (req: Request, res: Response) => {
         results: {
           likableId: likableId,
           likableType: likableType,
-          likeId: like.id,
+          commentId: like.id,
         },
       });
     }
@@ -122,12 +122,28 @@ export const getLikesOfLikable = async (req: Request, res: Response) => {
   }
 };
 
-// likeId => unliked likable
+// commentId => unliked likable
 export const deleteLikeOfLikable = async (req: Request, res: Response) => {
-  const likeId = Number(req.query.likeId);
   const user = res.locals.user;
+  const [likableId, likableClass] = getLikable(req.query);
+  if (likableId == null || likableClass == null) {
+    logger.warn("bad request, likable class or id is null");
+    res.status(400).json({
+      success: false,
+      status_message: "bad request",
+    });
+    return;
+  }
+
   try {
-    const like = await Like.findByPk(likeId);
+    const likableType = likableClass.tableName.slice(0, -1);
+    const like = await Like.findOne({
+      where: {
+        likableId: likableId,
+        likableType: likableType,
+        userId: user.id,
+      },
+    });
     if (!like) {
       logger.warn("like not found");
       res.status(404).json({

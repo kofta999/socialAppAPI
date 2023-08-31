@@ -96,6 +96,10 @@ GET http://{{host}}/likes?postId={{postId}}
 POST http://{{host}}/likes?postId={{postId}}
 Authorization: Bearer {{jwtToken}}
 
+// Unlike a post
+DELETE http://{{host}}/likes?postId={{postId}}
+Authorization: Bearer {{jwtToken}}
+
 ###
 
 // Comment likes
@@ -111,9 +115,9 @@ Authorization: Bearer {{jwtToken}}
 
 ###
 
-// Unlike posts or comments
-DELETE http://{{host}}/likes?likeId={{likeId}}
-Authorization: Bearer {{jwtToken2ndUser}}
+// Unlike a comment
+DELETE http://{{host}}/likes?commentId={{commentId}}
+Authorization: Bearer {{jwtToken}}
 
 ###
 
