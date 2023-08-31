@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import Post from "../models/post";
 import User from "../models/user";
+import Comment from "../models/comment";
 import logger from "../util/logger";
+import sequelize from "sequelize";
+import Like from "../models/like";
 
 // post content, user => created post with content and user
 export const postCreatePost = async (req: Request, res: Response) => {
@@ -35,8 +38,19 @@ export const postCreatePost = async (req: Request, res: Response) => {
 export const getPosts = async (req: Request, res: Response) => {
   try {
     const posts = await Post.findAll({
-      attributes: ["id", "content", "createdAt", "updatedAt"],
-      include: { model: User, attributes: ["fullName", "id"] },
+      attributes: {
+        include: [
+          [sequelize.fn("COUNT", sequelize.col("comments.id")), "commentCount"],
+          [sequelize.fn("COUNT", sequelize.col("likes.id")), "likesCount"],
+        ],
+        exclude: ["userId"],
+      },
+      include: [
+        { model: User, attributes: ["id", "fullName"] },
+        { model: Comment, attributes: [] },
+        { model: Like, attributes: [] },
+      ],
+      group: ["post.id"],
     });
     logger.info("fetched all posts");
     res.status(200).json({
