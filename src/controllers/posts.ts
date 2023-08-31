@@ -50,7 +50,7 @@ export const getPosts = async (req: Request, res: Response) => {
         { model: Comment, attributes: [] },
         { model: Like, attributes: [] },
       ],
-      group: ["post.id"],
+      group: ["post.id", "user.id"],
     });
     logger.info("fetched all posts");
     res.status(200).json({
