@@ -3,7 +3,7 @@
 @port = 3000
 @host = {{hostname}}:{{port}}
 @contentType = application/json
-@postId = 1
+@postId = 2
 @commentId = 2
 @likeId = 1
 @fullName = kofta
@@ -64,6 +64,7 @@ Authorization: Bearer {{jwtToken}}
 // Get all comments for a post
 ###
 GET http://{{host}}/comments?postId={{postId}}
+Authorization: Bearer {{jwtToken}}
 
 ###
 
@@ -106,7 +107,7 @@ GET http://{{host}}/likes?commentId={{commentId}}
 
 // Like a comment
 POST http://{{host}}/likes?commentId={{commentId}}
-Authorization: Bearer {{jwtToken2ndUser}}
+Authorization: Bearer {{jwtToken}}
 
 ###
 

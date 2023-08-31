@@ -4,6 +4,8 @@ import Post from "../models/post";
 import Comment from "../models/comment";
 import User from "../models/user";
 import logger from "../util/logger";
+import sequelize from "sequelize";
+import Like from "../models/like";
 
 // userId, postId => created comment
 export const postCreateComment = async (req: Request, res: Response) => {
@@ -48,6 +50,7 @@ export const postCreateComment = async (req: Request, res: Response) => {
 
 // postId => comments for postId
 export const getCommentsForPost = async (req: Request, res: Response) => {
+  const user: User = res.locals.user;
   const postId = Number(req.query.postId);
   try {
     const post = await Post.findByPk(postId);
@@ -59,8 +62,22 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
       });
     } else {
       const comments = await post.getComments({
-        attributes: ["id", "content", "createdAt", "updatedAt"],
-        include: { model: User, attributes: ["fullName"] },
+        attributes: [
+          "id",
+          "content",
+          "createdAt",
+          "updatedAt",
+          [
+            sequelize.literal(
+              `EXISTS (SELECT 1 FROM likes WHERE likes.likableId = comment.id AND likes.likableType = 'comment' AND likes.userId = ${user.id})`
+            ),
+            "likedByUser",
+          ],
+        ],
+        include: [
+          { model: User, attributes: ["fullName"] },
+          { model: Like, attributes: [] },
+        ],
       });
       logger.info("fetched all comments for a post");
       res.status(200).json({

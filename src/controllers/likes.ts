@@ -46,7 +46,11 @@ export const postLikeLikable = async (req: Request, res: Response) => {
       const likableType = likableClass.tableName.slice(0, -1);
       if (
         await Like.findOne({
-          where: { likableId: likable.id, userId: user.id },
+          where: {
+            likableId: likable.id,
+            userId: user.id,
+            likableType: likableType,
+          },
         })
       ) {
         logger.warn("bad request, already liked likable");
