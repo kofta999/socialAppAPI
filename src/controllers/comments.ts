@@ -67,12 +67,7 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
           "content",
           "createdAt",
           "updatedAt",
-          [
-            sequelize.literal(
-              `EXISTS (SELECT 1 FROM likes WHERE likes.likableId = comment.id AND likes.likableType = 'comment' AND likes.userId = ${user.id})`
-            ),
-            "likedByUser",
-          ],
+          [sequelize.literal(`EXISTS (SELECT 1 FROM likes WHERE "likes"."likableId" = comment.id AND "likes"."likableType" = 'comment' AND "likes"."userId" = ${user.id})`), 'likedByUser'],
         ],
         include: [
           { model: User, attributes: ["fullName"] },
