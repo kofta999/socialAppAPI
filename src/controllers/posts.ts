@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import Post from "../models/post";
 import User from "../models/user";
-import Comment from "../models/comment";
 import logger from "../util/logger";
-import sequelize from "sequelize";
-import Like from "../models/like";
 
 // post content, user => created post with content and user
 export const postCreatePost = async (req: Request, res: Response) => {

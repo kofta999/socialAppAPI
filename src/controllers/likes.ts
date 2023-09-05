@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { UniqueConstraintError } from "sequelize";
 import Post from "../models/post";
 import Comment from "../models/comment";
 import Like from "../models/like";
