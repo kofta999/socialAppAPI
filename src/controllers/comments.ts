@@ -70,7 +70,7 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
           [sequelize.literal(`EXISTS (SELECT 1 FROM likes WHERE "likes"."likableId" = comment.id AND "likes"."likableType" = 'comment' AND "likes"."userId" = ${user.id})`), 'likedByUser'],
         ],
         include: [
-          { model: User, attributes: ["fullName"] },
+          { model: User, attributes: ["id", "fullName"] },
           { model: Like, attributes: [] },
         ],
       });
