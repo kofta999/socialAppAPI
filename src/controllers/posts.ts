@@ -8,9 +8,10 @@ export const postCreatePost = async (req: Request, res: Response) => {
   const postContent = req.body.content;
   const user: User = res.locals.user;
   try {
-    if (!postContent) {
+    if (!postContent || postContent === "") {
       logger.warn("bad request, no post content");
       res.status(400).json({ success: false, status_message: "bad request" });
+      return;
     }
     const post = await user.createPost({ content: postContent });
     logger.info("created post");
@@ -61,8 +62,14 @@ export const putEditPost = async (req: Request, res: Response) => {
   const postId = Number(req.query.postId);
   try {
     const post = await Post.findByPk(postId);
-    const content = req.body.content;
-    if (!post) {
+    const content: string = req.body.content;
+    if (!content || content === "") {
+      logger.warn("bad request, no post content");
+      res.status(400).json({
+        success: false,
+        status_message: "bad request",
+      });
+    } else if (!post) {
       logger.warn("post not found");
       res.status(404).json({
         success: false,
@@ -73,12 +80,6 @@ export const putEditPost = async (req: Request, res: Response) => {
       res
         .status(403)
         .json({ success: false, status_message: "access forbidden" });
-    } else if (!content) {
-      logger.warn("bad request, no post content");
-      res.status(400).json({
-        success: false,
-        status_message: "bad request",
-      });
     } else {
       post.content = content;
       await post.save();
