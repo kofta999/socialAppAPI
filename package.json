@@ -4,7 +4,6 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "build": "npx tsc",
     "start": "ts-node src/server.ts",
     "devStart": "npx ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "jest"
