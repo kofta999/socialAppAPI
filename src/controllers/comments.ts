@@ -13,7 +13,7 @@ export const postCreateComment = async (req: Request, res: Response) => {
   const postId = Number(req.query.postId);
   const content = req.body.content;
   try {
-    if (!content) {
+    if (!content || content === "") {
       logger.warn("bad request, content is not found");
       res.status(400).json({
         success: false,

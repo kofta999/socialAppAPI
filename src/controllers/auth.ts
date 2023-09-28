@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/user";
@@ -10,6 +11,16 @@ interface payload {
 }
 
 // Helper functions
+
+const validationErrorHandler = (req: Request) => {
+  const possibleErrors = validationResult(req);
+  if (!possibleErrors.isEmpty()) {
+    const errors = possibleErrors.array();
+    // TODO: Improve error result
+    return errors
+  }
+  return []
+}
 
 // payload => jwt access token
 const generateAccessToken = (payload: payload) => {
@@ -70,6 +81,17 @@ export const authenticateUser = async (
 };
 
 export const postSignup = async (req: Request, res: Response) => {
+  const possibleErrors = validationErrorHandler(req);
+  if (possibleErrors.length > 0) {
+    logger.warn("error in validation")
+    return res.status(422).json({
+      success: false,
+      status_message: "error happened while validating input, check your input",
+      results: {
+        errors: possibleErrors
+      }
+    })
+  }
   const { fullName, email, password } = req.body;
   logger.debug(req.body);
   try {
@@ -104,6 +126,17 @@ export const postSignup = async (req: Request, res: Response) => {
 };
 
 export const postLogin = async (req: Request, res: Response) => {
+  const possibleErrors = validationErrorHandler(req);
+  if (possibleErrors.length > 0) {
+    logger.warn("error in validation")
+    return res.status(422).json({
+      success: false,
+      status_message: "error happened while validating input, check your input",
+      results: {
+        errors: possibleErrors
+      }
+    })
+  }
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ where: { email: email } });
