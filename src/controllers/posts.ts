@@ -1,10 +1,24 @@
 import { Request, Response } from "express";
+import { validationErrorHandler } from "../util/validators"
 import Post from "../models/post";
 import User from "../models/user";
 import logger from "../util/logger";
 
+const POSTS_PER_PAGE = 10;
+
 // post content, user => created post with content and user
 export const postCreatePost = async (req: Request, res: Response) => {
+  const possibleErrors = validationErrorHandler(req);
+  if (possibleErrors.length > 0) {
+    logger.warn("error in validation")
+    return res.status(422).json({
+      success: false,
+      status_message: "error happened while validating input, check your input",
+      results: {
+        errors: possibleErrors
+      }
+    })
+  }
   const postContent = req.body.content;
   const user: User = res.locals.user;
   try {
@@ -37,9 +51,11 @@ export const postCreatePost = async (req: Request, res: Response) => {
 export const getPosts = async (req: Request, res: Response) => {
   try {
     const user: User = res.locals.user;
+    let page = parseInt(req.query.page as string);
+    if (!page) { page = 1 }
     const posts = await Post.scope({
       method: ["withLikesAndComments", user.id],
-    }).findAll();
+    }).findAll({ limit: POSTS_PER_PAGE, offset: (page - 1) * POSTS_PER_PAGE });
     logger.info("fetched all posts");
     res.status(200).json({
       success: true,
@@ -58,6 +74,17 @@ export const getPosts = async (req: Request, res: Response) => {
 
 // postId, user, content => edited post with new content
 export const putEditPost = async (req: Request, res: Response) => {
+  const possibleErrors = validationErrorHandler(req);
+  if (possibleErrors.length > 0) {
+    logger.warn("error in validation")
+    return res.status(422).json({
+      success: false,
+      status_message: "error happened while validating input, check your input",
+      results: {
+        errors: possibleErrors
+      }
+    })
+  }
   const user = res.locals.user;
   const postId = Number(req.query.postId);
   try {

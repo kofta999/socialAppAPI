@@ -1,4 +1,16 @@
 import { body } from "express-validator";
+import { Request } from "express";
+import { validationResult } from "express-validator";
+
+export const validationErrorHandler = (req: Request) => {
+  const possibleErrors = validationResult(req);
+  if (!possibleErrors.isEmpty()) {
+    const errors = possibleErrors.array();
+    // TODO: Improve error result
+    return errors
+  }
+  return []
+}
 
 export const signUpValidator = [
   body("fullName").isAlphanumeric().isLength({ min: 3 }),

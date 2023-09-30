@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ForeignKeyConstraintError } from "sequelize";
+import { validationErrorHandler } from "../util/validators"
 import Post from "../models/post";
 import Comment from "../models/comment";
 import User from "../models/user";
@@ -7,8 +8,21 @@ import logger from "../util/logger";
 import sequelize from "sequelize";
 import Like from "../models/like";
 
+const COMMENTS_PER_PAGE = 10;
+
 // userId, postId => created comment
 export const postCreateComment = async (req: Request, res: Response) => {
+  const possibleErrors = validationErrorHandler(req);
+  if (possibleErrors.length > 0) {
+    logger.warn("error in validation")
+    return res.status(422).json({
+      success: false,
+      status_message: "error happened while validating input, check your input",
+      results: {
+        errors: possibleErrors
+      }
+    })
+  }
   const user: User = res.locals.user;
   const postId = Number(req.query.postId);
   const content = req.body.content;
@@ -52,6 +66,8 @@ export const postCreateComment = async (req: Request, res: Response) => {
 export const getCommentsForPost = async (req: Request, res: Response) => {
   const user: User = res.locals.user;
   const postId = Number(req.query.postId);
+  let page = parseInt(req.query.page as string);
+  if (!page) { page = 1 };
   try {
     const post = await Post.findByPk(postId);
     if (!post) {
@@ -73,6 +89,8 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
           { model: User, attributes: ["id", "fullName"] },
           { model: Like, attributes: [] },
         ],
+        limit: COMMENTS_PER_PAGE,
+        offset: (page - 1) * COMMENTS_PER_PAGE
       });
       logger.info("fetched all comments for a post");
       res.status(200).json({
@@ -91,6 +109,17 @@ export const getCommentsForPost = async (req: Request, res: Response) => {
 
 // commentId => updated comment
 export const putEditComment = async (req: Request, res: Response) => {
+  const possibleErrors = validationErrorHandler(req);
+  if (possibleErrors.length > 0) {
+    logger.warn("error in validation")
+    return res.status(422).json({
+      success: false,
+      status_message: "error happened while validating input, check your input",
+      results: {
+        errors: possibleErrors
+      }
+    })
+  }
   try {
     const user: User = res.locals.user;
     const commentId = Number(req.query.commentId);

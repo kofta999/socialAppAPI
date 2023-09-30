@@ -9,7 +9,7 @@
 @fullName = kofta
 @email = kofta@xd.com
 @password = dasjad1314
-@jwtToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoia29mdGFAa29mdGEuY29tIiwiaWF0IjoxNjkzOTQ5NjIxLCJleHAiOjE2OTUyNDU2MjF9.mMJ8RwhNcNbdrCEPVibH42mOI_uzZwzw-nG8ykl9o74
+@jwtToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoia29mdGFAeGQuY29tIiwiaWF0IjoxNjk2MDk4NDg3LCJleHAiOjE2OTczOTQ0ODd9.RXP7j9CyCfcgbwsNyKbfviary0s2Jz0FTHmPW5zrw0I
 @jwtToken2ndUser = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoia29mdGFAa29mdGEuY29tIiwiaWF0IjoxNjkzMzIxNzg3LCJleHAiOjE2OTQ2MTc3ODd9.dVKlIaR86E5_kIOXntsB9NmzCnD5Qobu8wW-MVlbMEs
 @userId = 1
 
@@ -27,7 +27,7 @@ Authorization: Bearer {{jwtToken}}
 ###
 
 // Get all posts
-GET http://{{host}}/posts
+GET http://{{host}}/posts?page=3
 Authorization: Bearer {{jwtToken}}
 
 ###

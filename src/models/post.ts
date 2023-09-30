@@ -42,9 +42,18 @@ Post.addScope("withLikesAndComments", (userId) => {
   return {
     attributes: {
       include: [
-        [sequelize.literal('(SELECT COUNT(*) FROM "comments" WHERE "comments"."postId" = "post"."id")'), 'commentCount'],
-        [sequelize.literal(`(SELECT COUNT(*) FROM likes WHERE "likes"."likableId" = post.id AND "likes"."likableType" = 'post')`), 'likesCount'],
-        [sequelize.literal(`EXISTS (SELECT 1 FROM likes WHERE "likes"."likableId" = post.id AND "likes"."likableType" = 'post' AND "likes"."userId" = ${userId})`), 'likedByUser'],
+        [
+          sequelize.literal('(SELECT COUNT(*) FROM comments WHERE comments.postId = post.id)'),
+          'commentCount'
+        ],
+        [
+          sequelize.literal(`(SELECT COUNT(*) FROM likes WHERE likes.likableId = post.id AND likes.likableType = 'post')`),
+          'likesCount'
+        ],
+        [
+          sequelize.literal(`EXISTS (SELECT 1 FROM likes WHERE likes.likableId = post.id AND likes.likableType = 'post' AND likes.userId = ${userId})`),
+          'likedByUser'
+        ]
       ],
       exclude: ["userId"],
     },

@@ -15,7 +15,7 @@ A project in progress made to make a social platform API similar to Twitter/X wi
 - [x] better error handling
 - [x] work on authentication
 - [ ] paginate the API
-- [ ] auth credentials validation
+- [x] auth credentials validation
 - [ ] create API docs
 
 ## Tech Stack used:
